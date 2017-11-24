@@ -42,10 +42,10 @@ plot_bivariate_wrt_quality <- function(property) {
 	  ggplot(wineQualityData, 
          aes(x = x, 
              y = property, 
-             color = factor(wineQualityData$quality), 
-             shape = factor(wineQualityData$quality))) +
+             color = factor(wineQualityData$quality))) +
 	    geom_point(size = 2, alpha = 0.4) + 
-	    scale_color_identity(guide = 'legend') + 
+	    geom_smooth(method = "lm", se = FALSE, size = 1)  +
+      scale_color_brewer(type = 'seq', guide = guide_legend(title = 'Quality')) +
 	    ylab('Property') + 
 	    xlab('#'),
 	  ggplot(wineQualityData, 
@@ -90,8 +90,8 @@ grid.arrange(qplot(data = wineQualityData, fixed.acidity),
 We analyze each property individually.
 
 #### 1. Fixed Acidity
-
 From the above plot, it appears that majority of the values for fixed acidity lie in the range 5 to 14. So we limit our fixed acidity values to this range.
+
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 plot_univariate(wineQualityData$fixed.acidity, 5, 14, 1)
 ```
@@ -99,24 +99,24 @@ plot_univariate(wineQualityData$fixed.acidity, 5, 14, 1)
 The median for fixed acidity is somewhere around 8 and the graph is positively skewed. Large number of values lie in the range of 7 to 9.
 
 #### 2. Volatile Acidity
-
 Majority values for volatile acidity lie in the range of 0.2 to 1.
+
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 plot_univariate(wineQualityData$volatile.acidity, 0.2, 1, 0.1)
 ```
 
 The median is around .54 and this distribution is also positively skewed. 
 
-
 #### 3. Citric Acid
-
 A lot of citric acid values appear to be zero. The data available for citric acid might be incomplete.
+
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 plot_univariate(wineQualityData$citric.acid, 0, 0.75, 0.1)
 ```
 
 #### 4. Residual Sugar
 The graph for residual sugar is heavily skewed towards the left and most of the data lies in the range 1 to 5.
+
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 plot_univariate(wineQualityData$residual.sugar, 1, 5, 0.5)
 ```
@@ -125,6 +125,7 @@ Even after filtering some outliers, the data is still positively skewed with a m
 
 #### 5. Chlorides
 The data for chlorides is similar to that of residual sugar. We consider the data that lies between 0.04 and 0.14.
+
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 plot_univariate(wineQualityData$chlorides, 0.04, 0.14, 0.01)
 ```
@@ -133,6 +134,7 @@ The data for this range appears to be normally distributed with a few outliers. 
 
 #### 6. Free Sulfur Dioxide
 Most of the values for free sulfur dioxide lie in the range of 0 to 35.
+
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 plot_univariate(wineQualityData$free.sulfur.dioxide, 0, 35, 2)
 ```
@@ -140,8 +142,8 @@ plot_univariate(wineQualityData$free.sulfur.dioxide, 0, 35, 2)
 In this property we see a high peak around 7-8 which gives our graph a positive skew. The median, however, is around 13. This is becuase of the long tail of values in the high range.
 
 #### 7. Total Sulfur Dioixide
-
 Most of the values are in the range 0 to 100. Since free sulfur dioxide is a subset of total sulfur dioxide, we can expect to see a similar positively skewed graph for total sulfur dioxide.
+
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 plot_univariate(wineQualityData$total.sulfur.dioxide, 0, 100, 5)
 ```
@@ -151,6 +153,7 @@ Our expectation was correct in this case, we see a positively skewed graph with 
 
 #### 8. Density
 The data for density is normally distributed.
+
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 plot_univariate(wineQualityData$density, 
                 quantile(wineQualityData$density, 0.025), 
@@ -161,6 +164,7 @@ Both the median and the mean appear to be around 0.997. So we can positively say
 
 #### 9. pH
 The data for pH level is also normally distributed.
+
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 plot_univariate(wineQualityData$pH, 
                 quantile(wineQualityData$pH, 0.025), 
@@ -170,16 +174,14 @@ plot_univariate(wineQualityData$pH,
 Both the median and the mean appear to be around 3.3. So we can positively say that our plot is normally distributed.
 
 #### 10. Sulphates
-
 In this case we put our limits at 0.3 and 1.
+
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 plot_univariate(wineQualityData$sulphates, 0.3, 1, 0.05)
 ```
 
 
-
 #### 11. Alcohol
-
 Most of the alcohol percentage is around 9 to 11%, which is normal and a few values goind till 13.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
@@ -231,10 +233,10 @@ grid.arrange(
   ggplot(wineQualityData, 
          aes(x = x, 
              y = wineQualityData$residual.sugar, 
-             color = factor(wineQualityData$quality), 
-             shape = factor(wineQualityData$quality))) + 
+             color = factor(wineQualityData$quality))) + 
     geom_point(size = 2, alpha = 0.4) + 
-    scale_color_identity(guide = 'legend') + 
+    geom_smooth(method = "lm", se = FALSE, size = 1)  +
+    scale_color_brewer(type = 'seq', guide = guide_legend(title = 'Quality')) +
     ylab('Property') + 
     ylim(0, 6) + 
     xlab('#'),
@@ -261,10 +263,10 @@ grid.arrange(
   ggplot(wineQualityData, 
          aes(x = x, 
              y = wineQualityData$sulphates, 
-             color = factor(wineQualityData$quality), 
-             shape = factor(wineQualityData$quality))) + 
+             color = factor(wineQualityData$quality))) + 
     geom_point(size = 2, alpha = 0.4) + 
-    scale_color_identity(guide = 'legend') + 
+    geom_smooth(method = "lm", se = FALSE, size = 1)  +
+    scale_color_brewer(type = 'seq', guide = guide_legend(title = 'Quality')) + 
     ylab('Property') + 
     ylim(0, 1) + 
     xlab('#'),
@@ -335,7 +337,8 @@ ggplot(
       y = wineQualityData$alcohol, 
       color = factor(wineQualityData$quality))) + 
   geom_point(alpha = 0.5) + 
-  scale_color_identity(guide = 'legend')
+  geom_smooth(method = "lm", se = FALSE, size = 1)  +
+  scale_color_brewer(type = 'seq', guide = guide_legend(title = 'Quality'))
 ```
 
 The above graph shows that wines with higher alcohol content and lower volatile acidity tend to have higher quality rating.
@@ -346,7 +349,8 @@ ggplot(wineQualityData,
            y = wineQualityData$alcohol, 
            color = factor(wineQualityData$quality))) + 
   geom_point(alpha = 0.5) + 
-  scale_color_identity(guide = 'legend')
+  geom_smooth(method = "lm", se = FALSE, size = 1)  +
+  scale_color_brewer(type = 'seq', guide = guide_legend(title = 'Quality'))
 ```
 
 Good quality wines tend to have lower sulphates level. Based on the past two observations we can expect a graph of sulphates and volatile acidity to have good quality wines to be prevalent in the bottom left of the graph. Let's have a look.
@@ -357,7 +361,8 @@ ggplot(wineQualityData,
            y = wineQualityData$volatile.acidity, 
            color = factor(wineQualityData$quality))) + 
   geom_point(alpha = 0.4) + 
-  scale_color_identity(guide = 'legend')
+  geom_smooth(method = "lm", se = FALSE, size = 1)  +
+      scale_color_brewer(type = 'seq', guide = guide_legend(title = 'Quality'))
 ```
 
 This graph stays true to our expectation. A lot of good quality wines lie in the bottom left of the graph.
@@ -399,16 +404,6 @@ ggplot(wineQualityData,
 ### Plot 3: Alcohol vs Volatile Acidity vs Quality
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-ggplot(wineQualityData, 
-       aes(x = wineQualityData$volatile.acidity, 
-           y = wineQualityData$alcohol, 
-           color = factor(wineQualityData$quality))) + 
-  geom_point(alpha = 0.5) + 
-  scale_color_identity(guide = 'legend') + 
-  ylab('Alcohol(%)') + 
-  xlab('Volatile Acidity(g/dm^3)') + 
-  labs(color = 'Quality')
-
 ggplot(wineQualityData,
        aes(x = wineQualityData$volatile.acidity, 
            y = wineQualityData$alcohol,
@@ -426,5 +421,7 @@ The above plots help us understand that Volatile acidity and alcohol are the maj
 ## Reflections:
 
 We were able to figure some properties that might be affecting the quality of a wine. However our dataset only had 1599 different wines, which were produced in a certain region of Portugal, which is much less than the large number of wines that are available in the market. Therefore our analysis need not necessarily apply to wines made in other countries. We also need to understand that the dataset was created by fixed group of individuals and since the taste differs from person to person, the ratings provided by this fixed group of individuals need not necessarily apply to the entire populace.
+
+While analyzing this dataset, I first started off with analyzing all the properties against quality. This helped me find out if there are any loopholes in the dataset. Citric acid is one such property which had a lot of zero values. This leads to believe that the data might be incomplete. This univariate analysis also helped me find out which proerties have a positive skew on quality. It also helpedus find the distribution of most of the values. 
 
 While analyzing this dataset, I came across a lot of outlier values. This required me to drill down into each dataset and look for insights. At each stage we narrowed down to some key properties that had an effect on the quality of wine. This, I think was a good way to approach the problem because it helped me figure out which properties to focus on.
